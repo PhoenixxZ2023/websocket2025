@@ -76,7 +76,10 @@ EOL
     # Carrega o serviço systemd
     systemctl daemon-reload
 
-    echo -e "\e[32mInstalação concluída.\e[0m"
+    # Cria link simbólico para acessar o menu
+    ln -sf $(realpath $0) /usr/local/bin/socket
+
+    echo -e "\e[32mInstalação concluída. Digite 'socket' para acessar o menu de opções.\e[0m"
 }
 
 # Função para ativar o servidor
@@ -103,43 +106,52 @@ configure_port() {
 }
 
 # Menu de opções
-while true; do
-    clear
-    echo -e "\e[34m-----------------------------------\e[0m"
-    echo -e "\e[34m|       Gerenciamento WebSocket      |\e[0m"
-    echo -e "\e[34m-----------------------------------\e[0m"
-    echo -e "\e[32m1.\e[0m Instalar dependências"
-    echo -e "\e[32m2.\e[0m Ativar servidor WebSocket"
-    echo -e "\e[32m3.\e[0m Desativar servidor WebSocket"
-    echo -e "\e[32m4.\e[0m Configurar porta do servidor WebSocket"
-    echo -e "\e[32m5.\e[0m Sair"
-    echo -e "\e[34m-----------------------------------\e[0m"
-    read -p "Escolha uma opção: " option
+menu() {
+    while true; do
+        clear
+        echo -e "\e[34m-----------------------------------\e[0m"
+        echo -e "\e[34m|       Gerenciamento WebSocket      |\e[0m"
+        echo -e "\e[34m-----------------------------------\e[0m"
+        echo -e "\e[32m1.\e[0m Instalar dependências"
+        echo -e "\e[32m2.\e[0m Ativar servidor WebSocket"
+        echo -e "\e[32m3.\e[0m Desativar servidor WebSocket"
+        echo -e "\e[32m4.\e[0m Configurar porta do servidor WebSocket"
+        echo -e "\e[32m5.\e[0m Sair"
+        echo -e "\e[34m-----------------------------------\e[0m"
+        read -p "Escolha uma opção: " option
 
-    case $option in
-        1)
-            install_dependencies
-            read -p "Pressione Enter para continuar..."
-            ;;
-        2)
-            start_server
-            read -p "Pressione Enter para continuar..."
-            ;;
-        3)
-            stop_server
-            read -p "Pressione Enter para continuar..."
-            ;;
-        4)
-            configure_port
-            read -p "Pressione Enter para continuar..."
-            ;;
-        5)
-            echo -e "\e[34mSaindo...\e[0m"
-            exit 0
-            ;;
-        *)
-            echo -e "\e[31mOpção inválida. Tente novamente.\e[0m"
-            read -p "Pressione Enter para continuar..."
-            ;;
-    esac
-done
+        case $option in
+            1)
+                install_dependencies
+                read -p "Pressione Enter para continuar..."
+                ;;
+            2)
+                start_server
+                read -p "Pressione Enter para continuar..."
+                ;;
+            3)
+                stop_server
+                read -p "Pressione Enter para continuar..."
+                ;;
+            4)
+                configure_port
+                read -p "Pressione Enter para continuar..."
+                ;;
+            5)
+                echo -e "\e[34mSaindo...\e[0m"
+                exit 0
+                ;;
+            *)
+                echo -e "\e[31mOpção inválida. Tente novamente.\e[0m"
+                read -p "Pressione Enter para continuar..."
+                ;;
+        esac
+    done
+}
+
+# Verifica se o script foi chamado como "socket" e mostra o menu
+if [[ $(basename $0) == "socket" ]]; then
+    menu
+else
+    install_dependencies
+fi
