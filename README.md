@@ -3,7 +3,7 @@
 # LINK INSTALAÇÃO 01
 
 ````
-curl -o install-websocket.sh https://raw.githubusercontent.com/PhoenixxZ2023/websocket2025/main/install-websocket.sh && chmod +x install-websocket.sh && ./install-websocket.sh
+apt update -y && apt upgrade -y && wget -y; bash <(wget -qO- raw.githubusercontent.com/PhoenixxZ2023/wesocket202/main/ssh-plus)
 ````
 
 # LINK INSTALAÇÃO 02
