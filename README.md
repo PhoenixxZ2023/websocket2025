@@ -2,6 +2,6 @@
 
 # LINK INSTALAÇÃO 01
 
-´´´´
-curl -o install.sh https://seu-servidor.com/install.sh && chmod +x install.sh && ./install.sh
-´´´
+````
+curl -o install-websocket.sh https://raw.githubusercontent.com/PhoenixxZ2023/websocket2025/main/install-websocket.sh && chmod +x install-websocket.sh && ./install-websocket.sh
+````
