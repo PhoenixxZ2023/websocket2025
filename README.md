@@ -3,7 +3,7 @@
 # LINK INSTALAÇÃO 01
 
 ````
-apt update -y && apt upgrade -y && wget -y; bash <(wget -qO- raw.githubusercontent.com/PhoenixxZ2023/wesocket202/main/ssh-plus)
+apt update -y && apt upgrade -y && wget -y; bash <(wget -qO- raw.githubusercontent.com/PhoenixxZ2023/wesocket202/main/install-websocket.sh)
 ````
 
 # LINK INSTALAÇÃO 02
