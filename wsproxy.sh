@@ -23,7 +23,7 @@ fun_wsproxy () {
 
     baixar_wsproxy() {
         echo "${YELLOW}Baixando script de proxy WebSocket...${RESET}"
-        wget -O /root/wsproxy.py https://github.com/opiran-club/ssh-websocket/raw/main/wsproxy.py
+        wget -O /root/wsproxy.py https://github.com/PhoenixxZ2023/websocket2025/raw/main/wsproxy.py
     }
 
     clear
