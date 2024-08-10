@@ -19,7 +19,3 @@ apt update && apt upgrade -y && wget https://raw.githubusercontent.com/PhoenixxZ
 ```
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------
-#### Written by OPIran
-TELEGRAM CHANNEL: https://t.me/OPIranv2rayproxy
-
-TELEGRAM GROUP: https://t.me/OPIranCluB
