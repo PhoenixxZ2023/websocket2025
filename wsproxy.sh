@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fun_wsproxy () {
+fun_wsproxy() {
     CYAN=$(tput setaf 6)
     GREEN=$(tput setaf 2)
     RED=$(tput setaf 1)
@@ -25,8 +25,6 @@ fun_wsproxy () {
         echo "${YELLOW}Baixando script de proxy WebSocket...${RESET}"
         wget -O /root/wsproxy.py https://github.com/PhoenixxZ2023/websocket2025/raw/main/wsproxy.py
     }
-
-    clear
 
     configurar_wsproxy() {
         pip install websockets
@@ -166,6 +164,7 @@ WantedBy=multi-user.target" | sudo tee /etc/systemd/system/wsproxy.service > /de
     done
 
     echo -e "${GREEN}A instalação e configuração do proxy WebSocket foram concluídas com sucesso.${RESET}"
+    echo -e "${GREEN}Para acessar o menu principal novamente, digite:${RESET} ${CYAN}socket${RESET}"
 }
 
 fun_wsproxy
