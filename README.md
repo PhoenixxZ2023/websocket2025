@@ -1,13 +1,25 @@
-# websocket2025
+### WEBSOCKET OVER SSH (SSH WEBSOCKET)
 
-# LINK INSTALAÇÃO 01
+#### setup websocket server over ssh via cloudflare CDN
+#### Fully automatic script just answer the question and at the end gives you payload and enjoy
 
-````
-apt update -y && apt upgrade -y && wget -y; bash <(wget -qO- raw.githubusercontent.com/PhoenixxZ2023/wesocket202/main/install-websocket.sh)
-````
+##### Feel free to contact with me (telegram or github)
+------------------------------------------------------------------------------------------------------------------------------------------------------
 
-# LINK INSTALAÇÃO 02
+❗ Requirements
+- run with root previllage
+- its written for UBUNTU and CENTOS
+- no any requirements, they will be install
 
-````
-wget -o install-websocket.sh https://raw.githubusercontent.com/PhoenixxZ2023/websocket2025/main/install-websocket.sh && chmod +x install-websocket.sh && ./install-websocket.sh
-````
+------------------------------------------------------------------------------------------------------------------------------------------------------
+❗❗ INSTALLATION
+
+```
+apt update && apt upgrade -y && wget https://raw.githubusercontent.com/PhoenixxZ2023/websocket2025/main/wsproxy.sh && chmod +x wsproxy.sh && ./wsproxy.sh
+```
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
+#### Written by OPIran
+TELEGRAM CHANNEL: https://t.me/OPIranv2rayproxy
+
+TELEGRAM GROUP: https://t.me/OPIranCluB
