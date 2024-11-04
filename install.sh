@@ -14,8 +14,8 @@ AGN_MANAGER_LINK="/usr/local/bin/websocket"
 check_compatibility() {
     local os_version
     os_version=$(lsb_release -rs | cut -d. -f1)
-    if [[ "$os_version" != "22" && "$os_version" != "24" ]]; then
-        echo -e "\033[1;31mEste script é compatível apenas com o Ubuntu 22 e 24.\033[0m"
+    if [[ "$os_version" != "20" && "$os_version" != "22" ]]; then
+        echo -e "\033[1;31mEste script é compatível apenas com o Ubuntu 20 e 22.\033[0m"
         exit 1
     fi
 }
