@@ -10,16 +10,6 @@ AGN_MANAGER_SCRIPT="agnws_manager.sh"
 AGN_MANAGER_PATH="$INSTALL_DIR/$AGN_MANAGER_SCRIPT"
 AGN_MANAGER_LINK="/usr/local/bin/websocket"
 
-# Função para verificar a compatibilidade do sistema operacional
-check_compatibility() {
-    local os_version
-    os_version=$(lsb_release -rs | cut -d. -f1)
-    if [[ "$os_version" != "20" && "$os_version" != "22" ]]; then
-        echo -e "\033[1;31mEste script é compatível apenas com o Ubuntu 20 e 22.\033[0m"
-        exit 1
-    fi
-}
-
 # Função para instalar pacotes necessários
 install_required_packages() {
     echo -e "\033[1;34mInstalando pacotes necessários...\033[0m"
