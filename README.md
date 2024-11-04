@@ -37,8 +37,12 @@ Follow these steps to install and use the WebSocket Service Manager:
    Use `wget` to download the installation script and `chmod` to make it executable:
 
    ```bash
-   wget https://raw.githubusercontent.com/khaledagn/AGN-SSH-Websocket-VPN/main/install.sh
+   wget https://raw.githubusercontent.com/PhoenixxZ2023/websocket2025/main/install.sh
    chmod +x install.sh
+
+````
+bash <(curl -sL https://raw.githubusercontent.com/PhoenixxZ2023/websocket2025/main/install.sh)
+
 
 2. **Run the Installation Script:**
 
