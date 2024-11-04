@@ -1,14 +1,23 @@
 #!/usr/bin/python3
-import socket, threading, select, sys, getopt, time
+import socket
+import threading
+import select
+import sys
+import getopt
+import time
+import logging
+
+# Configuração do logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 # Listen
 LISTENING_ADDR = '0.0.0.0'
-LISTENING_PORT = 8098  # Default port 8098
+LISTENING_PORT = 8098  # Porta padrão 8098
 
-# Pass
+# Senha (pode ser lida de um arquivo de configuração ou variável de ambiente)
 PASS = ''
 
-# CONST
+# Constantes
 BUFLEN = 4096 * 4
 TIMEOUT = 60
 DEFAULT_HOST = '127.0.0.1:22'
@@ -32,6 +41,7 @@ class Server(threading.Thread):
         self.soc.bind((self.host, intport))
         self.soc.listen(0)
         self.running = True
+        logging.info('Servidor iniciado em %s:%d', self.host, self.port)
 
         try:
             while self.running:
@@ -47,10 +57,11 @@ class Server(threading.Thread):
         finally:
             self.running = False
             self.soc.close()
+            logging.info('Servidor fechado')
 
     def printLog(self, log):
         self.logLock.acquire()
-        print(log)
+        logging.info(log)
         self.logLock.release()
 
     def addConn(self, conn):
@@ -88,26 +99,25 @@ class ConnectionHandler(threading.Thread):
         self.client = socClient
         self.client_buffer = b''
         self.server = server
-        self.log = 'Connection: ' + str(addr)
+        self.log = 'Conexão: ' + str(addr)
 
     def close(self):
         try:
             if not self.clientClosed:
                 self.client.shutdown(socket.SHUT_RDWR)
                 self.client.close()
-        except:
-            pass
-        finally:
-            self.clientClosed = True
+                self.clientClosed = True
+                logging.info('Conexão com %s fechada', self.log)
+        except Exception as e:
+            logging.error('Erro ao fechar a conexão com o cliente: %s', e)
 
         try:
             if not self.targetClosed:
                 self.target.shutdown(socket.SHUT_RDWR)
                 self.target.close()
-        except:
-            pass
-        finally:
-            self.targetClosed = True
+                self.targetClosed = True
+        except Exception as e:
+            logging.error('Erro ao fechar a conexão com o destino: %s', e)
 
     def run(self):
         try:
@@ -135,11 +145,11 @@ class ConnectionHandler(threading.Thread):
                 else:
                     self.client.send(b'HTTP/1.1 403 Forbidden!\r\n\r\n')
             else:
-                print('- No X-Real-Host!')
+                logging.warning('- Sem X-Real-Host!')
                 self.client.send(b'HTTP/1.1 400 NoXRealHost!\r\n\r\n')
 
         except Exception as e:
-            self.log += ' - error: ' + str(e)
+            self.log += ' - erro: ' + str(e)
             self.server.printLog(self.log)
         finally:
             self.close()
@@ -158,7 +168,7 @@ class ConnectionHandler(threading.Thread):
         if aux == -1:
             return b''
 
-        return head[:aux];
+        return head[:aux]
 
     def connect_target(self, host):
         i = host.find(b':')
@@ -166,16 +176,16 @@ class ConnectionHandler(threading.Thread):
             port = int(host[i+1:])
             host = host[:i]
         else:
-            if self.method=='CONNECT':
-                port = 443
-            else:
-                port = LISTENING_PORT
+            port = LISTENING_PORT
 
-        (soc_family, soc_type, proto, _, address) = socket.getaddrinfo(host.decode('utf-8'), port)[0]
-
-        self.target = socket.socket(soc_family, soc_type, proto)
-        self.targetClosed = False
-        self.target.connect(address)
+        try:
+            (soc_family, soc_type, proto, _, address) = socket.getaddrinfo(host.decode('utf-8'), port)[0]
+            self.target = socket.socket(soc_family, soc_type, proto)
+            self.targetClosed = False
+            self.target.connect(address)
+            logging.info('Conectado ao destino %s:%d', host.decode('utf-8'), port)
+        except Exception as e:
+            logging.error('Erro ao conectar ao destino: %s', e)
 
     def method_CONNECT(self, path):
         self.log += ' - CONNECT ' + path.decode('utf-8')
@@ -211,8 +221,9 @@ class ConnectionHandler(threading.Thread):
                             count = 0
                         else:
                             break
-                    except:
+                    except Exception as e:
                         error = True
+                        logging.error('Erro ao enviar dados: %s', e)
                         break
             if count == TIMEOUT:
                 error = True
@@ -221,8 +232,8 @@ class ConnectionHandler(threading.Thread):
 
 
 def print_usage():
-    print('Usage: proxy.py -p <port>')
-    print('       proxy.py -b <bindAddr> -p <port>')
+    print('Uso: proxy.py -p <porta>')
+    print('       proxy.py -b <bindAddr> -p <porta>')
     print('       proxy.py -b 0.0.0.0 -p 80')
 
 def parse_args(argv):
@@ -243,11 +254,10 @@ def parse_args(argv):
         elif opt in ("-p", "--port"):
             LISTENING_PORT = int(arg)
 
-
 def main(host=LISTENING_ADDR, port=LISTENING_PORT):
     print("\n:-------TURBONET WEBSOCKET-MOD-------:\n")
-    print("Listening addr: " + LISTENING_ADDR)
-    print("Listening port: " + str(LISTENING_PORT) + "\n")
+    logging.info("Endereço de escuta: %s", LISTENING_ADDR)
+    logging.info("Porta de escuta: %d", LISTENING_PORT)
     print(":-------------------------:\n")
     server = Server(LISTENING_ADDR, LISTENING_PORT)
     server.start()
@@ -255,7 +265,7 @@ def main(host=LISTENING_ADDR, port=LISTENING_PORT):
         try:
             time.sleep(2)
         except KeyboardInterrupt:
-            print('Stopping...')
+            logging.info('Parando...')
             server.close()
             break
 
