@@ -42,7 +42,7 @@ Follow these steps to install and use the WebSocket Service Manager:
 
 ````
 bash <(curl -sL https://raw.githubusercontent.com/PhoenixxZ2023/websocket2025/main/install.sh)
-
+````
 
 2. **Run the Installation Script:**
 
