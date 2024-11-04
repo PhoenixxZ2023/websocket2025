@@ -245,7 +245,7 @@ def parse_args(argv):
 
 
 def main(host=LISTENING_ADDR, port=LISTENING_PORT):
-    print("\n:-------AGN Websocket Proxy by Khaled AGN-------:\n")
+    print("\n:-------TURBONET WEBSOCKET-MOD-------:\n")
     print("Listening addr: " + LISTENING_ADDR)
     print("Listening port: " + str(LISTENING_PORT) + "\n")
     print(":-------------------------:\n")
