@@ -102,9 +102,6 @@ display_installation_summary() {
 main() {
     display_banner
 
-    # Verificar compatibilidade do sistema operacional
-    check_compatibility
-
     # Instalar pacotes necessários
     install_required_packages
 
