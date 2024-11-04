@@ -1,56 +1,71 @@
 #!/bin/bash
 
-# Constants
-PYTHON_SCRIPT_URL="https://github.com/khaledagn/AGN-SSH-Websocket-VPN/raw/main/agn_websocket.py"
-AGN_MANAGER_SCRIPT_URL="https://github.com/khaledagn/AGN-SSH-Websocket-VPN/raw/main/agnws_manager.sh"
+# Constantes
+PYTHON_SCRIPT_URL="https://github.com/PhoenixxZ2023/websocket2025/raw/main/agn_websocket.py"
+AGN_MANAGER_SCRIPT_URL="https://github.com/PhoenixxZ2023/websocket2025/raw/main/agnws_manager.sh"
 INSTALL_DIR="/opt/agn_websocket"
 SYSTEMD_SERVICE_FILE="/etc/systemd/system/agn-websocket.service"
-PYTHON_BIN=$(command -v python3)  # Ensure python3 is available
+PYTHON_BIN=$(command -v python3)  # Certifique-se de que o Python3 está disponível
 AGN_MANAGER_SCRIPT="agnws_manager.sh"
 AGN_MANAGER_PATH="$INSTALL_DIR/$AGN_MANAGER_SCRIPT"
 AGN_MANAGER_LINK="/usr/local/bin/websocket"
 
-# Function to install required packages
+# Função para verificar a compatibilidade do sistema operacional
+check_compatibility() {
+    local os_version
+    os_version=$(lsb_release -rs | cut -d. -f1)
+    if [[ "$os_version" != "22" && "$os_version" != "24" ]]; then
+        echo -e "\033[1;31mEste script é compatível apenas com o Ubuntu 22 e 24.\033[0m"
+        exit 1
+    fi
+}
+
+# Função para instalar pacotes necessários
 install_required_packages() {
-    echo "Installing required packages..."
-    apt-get update
-    apt-get install -y python3-pip dos2unix wget
-    pip3 install --upgrade pip
-    pip3 install websocket-client  # Adjust with other required packages as needed
+    echo -e "\033[1;34mInstalando pacotes necessários...\033[0m"
+    apt-get update -qq
+    apt-get install -y python3-pip dos2unix wget &>/dev/null
+    # Verifica se o pip3 foi instalado corretamente
+    if ! command -v pip3 &>/dev/null; then
+        echo -e "\033[1;31mErro: pip3 não foi instalado corretamente.\033[0m"
+        exit 1
+    fi
+    pip3 install --upgrade pip &>/dev/null
+    pip3 install websocket-client &>/dev/null  # Ajuste conforme necessário
 }
 
-# Function to download Python proxy script using wget
+# Função para baixar o script Python do proxy usando wget
 download_agn_websocket() {
-    echo "Downloading Python proxy script from $PYTHON_SCRIPT_URL..."
-    wget -O "$INSTALL_DIR/agn_websocket.py" "$PYTHON_SCRIPT_URL"
+    echo -e "\033[1;34mBaixando script Python do proxy de $PYTHON_SCRIPT_URL...\033[0m"
+    wget -q -O "$INSTALL_DIR/agn_websocket.py" "$PYTHON_SCRIPT_URL"
 }
 
-# Function to download agnws_manager.sh script using wget
+# Função para baixar o script agnws_manager.sh usando wget
 download_agnws_manager() {
-    echo "Downloading $AGN_MANAGER_SCRIPT from $AGN_MANAGER_SCRIPT_URL..."
-    wget -O "$AGN_MANAGER_PATH" "$AGN_MANAGER_SCRIPT_URL"
+    echo -e "\033[1;34mBaixando $AGN_MANAGER_SCRIPT de $AGN_MANAGER_SCRIPT_URL...\033[0m"
+    wget -q -O "$AGN_MANAGER_PATH" "$AGN_MANAGER_SCRIPT_URL"
     chmod +x "$AGN_MANAGER_PATH"
     ln -sf "$AGN_MANAGER_PATH" "$AGN_MANAGER_LINK"
     convert_to_unix_line_endings "$AGN_MANAGER_PATH"
 }
 
-# Function to convert script to Unix line endings
+# Função para converter o script para terminação de linha Unix
 convert_to_unix_line_endings() {
     local file="$1"
-    echo "Converting $file to Unix line endings..."
-    dos2unix "$file"
+    echo -e "\033[1;34mConvertendo $file para terminações de linha Unix...\033[0m"
+    dos2unix "$file" &>/dev/null
 }
 
-# Function to start systemd service
+# Função para iniciar o serviço systemd
 start_systemd_service() {
-    echo "Starting agn-websocket service..."
+    echo -e "\033[1;34mIniciando o serviço agn-websocket...\033[0m"
     systemctl start agn-websocket
-    systemctl status agn-websocket --no-pager  # Optionally, show status after starting
+    systemctl status agn-websocket --no-pager
 }
 
-# Function to install systemd service
+# Função para instalar o serviço systemd
 install_systemd_service() {
-    echo "Creating systemd service file..."
+    echo -e "\033[1;34mCriando arquivo de serviço systemd...\033[0m"
     cat > "$SYSTEMD_SERVICE_FILE" <<EOF
 [Unit]
 Description=Python Proxy Service
@@ -65,66 +80,69 @@ Group=root
 [Install]
 WantedBy=multi-user.target
 EOF
-    echo "Reloading systemd daemon..."
+    echo -e "\033[1;34mRecarregando daemon do systemd...\033[0m"
     systemctl daemon-reload
-    echo "Enabling agn-websocket service..."
+    echo -e "\033[1;34mHabilitando o serviço agn-websocket...\033[0m"
     systemctl enable agn-websocket
 }
 
-# Function to display banner
+# Função para exibir banner
 display_banner() {
     cat << "EOF"
 **********************************************
 *                                            *
-*                Khaled AGN                  *
-*      Visit me on Telegram: @khaledagn      *
+*                WEBSOCKET 2025                  *
+*     Visite-me no Telegram: @TUBONET2023    *
 *                                            *
 **********************************************
 EOF
     echo
 }
 
-# Function to display installation summary
+# Função para exibir resumo da instalação
 display_installation_summary() {
-    echo "Installation completed successfully!"
+    echo -e "\033[1;32mInstalação concluída com sucesso!\033[0m"
     echo
-    echo "Installed agn_websocket.py in: $INSTALL_DIR"
-    echo "Installed $AGN_MANAGER_SCRIPT in: $AGN_MANAGER_PATH"
-    echo "You can now manage the WebSocket service using 'websocket menu' command."
+    echo "Script agn_websocket.py instalado em: $INSTALL_DIR"
+    echo "Script $AGN_MANAGER_SCRIPT instalado em: $AGN_MANAGER_PATH"
+    echo "Use o comando 'websocket menu' para gerenciar o serviço WebSocket."
 }
 
-# Main function
+# Função principal
 main() {
     display_banner
 
-    # Install required packages
+    # Verificar compatibilidade do sistema operacional
+    check_compatibility
+
+    # Instalar pacotes necessários
     install_required_packages
 
-    # Check if python3 is available
+    # Verificar se o Python 3 está disponível
     if [ -z "$PYTHON_BIN" ]; then
-        echo "Error: Python 3 is not installed or not found in PATH. Please install Python 3."
+        echo -e "\033[1;31mErro: Python 3 não está instalado ou não foi encontrado no PATH. Instale o Python 3.\033[0m"
         exit 1
     fi
 
-    # Create installation directory
-    echo "Creating installation directory: $INSTALL_DIR"
+    # Criar diretório de instalação
+    echo -e "\033[1;34mCriando diretório de instalação: $INSTALL_DIR\033[0m"
     mkdir -p "$INSTALL_DIR"
 
-    # Download Python proxy script
+    # Baixar script Python do proxy
     download_agn_websocket
 
-    # Download agnws_manager.sh script
+    # Baixar script agnws_manager.sh
     download_agnws_manager
 
-    # Install systemd service
+    # Instalar serviço systemd
     install_systemd_service
     
-    # Start systemd service
+    # Iniciar serviço systemd
     start_systemd_service
 
-    # Display installation summary
+    # Exibir resumo da instalação
     display_installation_summary
 }
 
-# Run main function
+# Executar função principal
 main
